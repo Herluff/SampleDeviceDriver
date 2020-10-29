@@ -55,9 +55,15 @@ namespace SampleDeviceDriver.DeviceCommunication
                 string state = kvs[1];
                 return state;
             }
-            catch (System.Net.Http.HttpRequestException ex)
+            catch (HttpRequestException ex)
             {
                 throw new ApplicationException($"can't get current state from {actualUrl}", ex);
+            }
+            catch (AggregateException ex)
+            {
+                if (ex.InnerException.GetType() == typeof(HttpRequestException))
+                    throw new ApplicationException($"can't get current state from {actualUrl}", ex.InnerException);
+                throw;
             }
         }
     }
