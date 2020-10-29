@@ -7,7 +7,6 @@ using VideoOS.Platform.DriverFramework.Exceptions;
 using VideoOS.Platform.DriverFramework.Managers;
 using VideoOS.Platform.DriverFramework.Utilities;
 
-
 namespace SampleDeviceDriver
 {
     /// <summary>
@@ -16,8 +15,6 @@ namespace SampleDeviceDriver
     /// </summary>
     public class SampleDeviceDriverConnectionManager : ConnectionManager
     {
-        private InputPoller _inputPoller;
-
         private Uri _uri;
         private string _userName;
         private SecureString _password;
@@ -46,9 +43,12 @@ namespace SampleDeviceDriver
 
             // TODO: Establish connection
 
+            // TODO DEMO "connecting w/sucess..!
+            _connected = true;
+
             // polling for events from the device. Might not be needed if the event mechanism of your hardware is not poll based
-            _inputPoller = new InputPoller(Container.EventManager, this);
-            _inputPoller.Start();
+            //_inputPoller = new InputPoller(Container.EventManager, this);
+            //_inputPoller.Start();
         }
 
         /// <summary>
@@ -70,5 +70,7 @@ namespace SampleDeviceDriver
                 return _connected;
             }
         }
+
+        public Uri Uri { get { return _uri; } }
     }
 }

@@ -28,12 +28,12 @@ namespace SampleDeviceDriver
         {
             if (!Container.ConnectionManager.IsConnected)
             {
-                throw new ConnectionLostException("Connection not established");
+                throw new ConnectionLostException("E1 - Connection not established");
             }
 
             var driverInfo = Container.Definition.DriverInfo;
             var product = driverInfo.SupportedProducts.FirstOrDefault();
-            var macAddress = "DE:AD:C0:DE:56:78"; // TODO: Make request to hardware
+            var macAddress = "DE:AD:C0:DE:56:77"; // TODO: Make request to hardware
 
             return new ProductInformation
             {
@@ -62,6 +62,32 @@ namespace SampleDeviceDriver
 
             // TODO: Add definition of setup fields supported by hardware and devices
 
+            fields.Add(new StringSetupField()
+            {
+                Key = Constants.Switch1,
+                DisplayName = "Switch id (part of the uri)",
+                DisplayNameReferenceId = Guid.Empty,
+                IsReadOnly = false,
+                ReferenceId = Constants.Switch1RefId,
+                DefaultValue = "DoorA",
+            });
+            fields.Add(new StringSetupField()
+            {
+                Key = Constants.Switch1Activated,
+                DisplayName = "Activation value (fx. on)",
+                DisplayNameReferenceId = Guid.Empty,
+                IsReadOnly = false,
+                ReferenceId = Constants.Switch1ActivatedRefId,
+                DefaultValue = "on",
+            }); fields.Add(new StringSetupField()
+            {
+                Key = Constants.Switch1Deactivated,
+                DisplayName = "Dectivation value (fx. off)",
+                DisplayNameReferenceId = Guid.Empty,
+                IsReadOnly = false,
+                ReferenceId = Constants.Switch1DeactivatedRefId,
+                DefaultValue = "off",
+            });
             return fields;
         }
 
@@ -78,120 +104,23 @@ namespace SampleDeviceDriver
         {
             var devices = new List<DeviceDefinitionBase>();
 
-            devices.Add(new CameraDeviceDefinition()
-            {
-                DisplayName = "SampleDeviceDriver camera",
-                DeviceId = Constants.Video1.ToString(),
-                DeviceEvents = BuildDeviceEvents(),
-                Settings = new Dictionary<string, string>()
-                {
-                    // TODO: Add settings supported by the device - also for the other devices below.
-                },
-                Streams = BuildCameraStreams(),
-                // Leave PtzSupport set to null if PTZ is not supported
-                PtzSupport = BuildPtzSupport(),
-            });
-
             // TODO: If supported by the hardware, add more camera devices (same for below device types). Also remove the devices not supported.
-
-            devices.Add(new MetadataDeviceDefinition()
-            {
-                DisplayName = "SampleDeviceDriver metadata device",
-                DeviceId = Constants.Metadata1.ToString(),
-                Streams = BuildMetadataStreams(),
-            });
-
-            devices.Add(new MicrophoneDeviceDefinition()
-            {
-                DisplayName = "SampleDeviceDriver microphone",
-                DeviceId = Constants.Audio1.ToString(),
-                Streams = BuildAudioStream(),
-            });
 
             devices.Add(new OutputDeviceDefinition()
             {
-                DisplayName = "SampleDeviceDriver output",
+                DisplayName = "Switching device output",
                 DeviceId = Constants.Output1.ToString(),
                 SupportSetState = true,
                 SupportTrigger = true,
-            });
-
-            devices.Add(new InputDeviceDefinition()
-            {
-                DisplayName = "SampleDeviceDriver input",
-                DeviceId = Constants.Input1.ToString(),
-            });
-
-            devices.Add(new SpeakerDeviceDefinition()
-            {
-                DisplayName = "SampleDeviceDriver speaker",
-                DeviceId = Constants.Speaker1.ToString(),
-                Streams = BuildSpeakerStream()
+                Settings = new Dictionary<string, string>()
+                {
+                    { Constants.Switch1, "Door2" },
+                    { Constants.Switch1Activated, "open" },
+                    { Constants.Switch1Deactivated, "close" }
+                }
             });
 
             return devices;
-        }
-
-        private static ICollection<StreamDefinition> BuildCameraStreams()
-        {
-            ICollection<StreamDefinition> streams = new List<StreamDefinition>();
-            streams.Add(new StreamDefinition()
-            {
-                DisplayName = "SampleDeviceDriver video stream",
-                ReferenceId = Constants.VideoStream1RefId.ToString(),
-                Settings = new Dictionary<string, string>()
-                {
-                    // TODO: Add settings supported by the stream
-                },
-                RemotePlaybackSupport = true,
-            });
-
-            return streams;
-        }
-
-        private static ICollection<StreamDefinition> BuildAudioStream()
-        {
-            ICollection<StreamDefinition> streams = new List<StreamDefinition>();
-            streams.Add(new StreamDefinition()
-            {
-                DisplayName = "SampleDeviceDriver audio stream",
-                ReferenceId = Constants.AudioStream1RefId.ToString(),
-                Settings = new Dictionary<string, string>()
-                {
-                    // TODO: Add settings supported by the stream
-                },
-            });
-            return streams;
-        }
-
-        private static ICollection<StreamDefinition> BuildSpeakerStream()
-        {
-            ICollection<StreamDefinition> streams = new List<StreamDefinition>();
-            streams.Add(new StreamDefinition()
-            {
-                DisplayName = "SampleDeviceDriver speaker stream",
-                ReferenceId = Constants.SpeakerStream1RefId.ToString(),
-                Settings = new Dictionary<string, string>()
-                {
-                    // TODO: Add settings supported by the stream
-                },
-            });
-            return streams;
-        }
-
-        private static ICollection<StreamDefinition> BuildMetadataStreams()
-        {
-            ICollection<StreamDefinition> streams = new List<StreamDefinition>();
-            streams.Add(new StreamDefinition()
-            {
-                DisplayName = "SampleDeviceDriver metadata stream",
-                ReferenceId = MetadataType.BoundingBoxDisplayId.ToString(), // TODO: Potentially change this to one of the other supported meatadata stream types
-                MetadataTypes = new List<MetadataTypeDefinition>()
-                {
-                    // TODO: Add metadata types
-                }
-            });
-            return streams;
         }
 
         private static ICollection<EventDefinition> BuildDeviceEvents()
@@ -200,54 +129,6 @@ namespace SampleDeviceDriver
 
             // TODO: Add events supported by device.
             return deviceEvents;
-        }
-
-        private static PtzSupport BuildPtzSupport()
-        {
-            // TODO: Update below to reflect actual PTZ support.
-
-            PtzMoveSupport moveSupport = new PtzMoveSupport()
-            {
-                AbsoluteSupport = true,
-                AutomaticSupport = false,
-                RelativeSupport = true,
-                SpeedSupport = true,
-                StartSupport = true,
-                StopSupport = true,
-            };
-
-            PtzMoveSupport moveSupportZoom = new PtzMoveSupport()
-            {
-                AbsoluteSupport = true,
-                AutomaticSupport = false,
-                RelativeSupport = true,
-                SpeedSupport = false,
-                StartSupport = true,
-                StopSupport = true,
-            };
-
-            PresetSupport presetSupport = new PresetSupport()
-            {
-                AbsoluteSpeedSupport = false,
-                LoadFromDeviceSupport = true,
-                QueryAbsolutePositionSupport = true,
-                SetPresetSupport = true,
-                SpeedSupport = true,
-            };
-
-            PtzSupport ptzSupport = new PtzSupport()
-            {
-                CenterSupport = true,
-                DiagonalSupport = true,
-                HomeSupport = true,
-                RectangleSupport = true,
-                PanSupport = moveSupport,
-                TiltSupport = moveSupport,
-                ZoomSupport = moveSupportZoom,
-                PresetSupport = presetSupport,
-            };
-
-            return ptzSupport;
         }
     }
 }

@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30523.141
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleDeviceDriver", "SampleDeviceDriver\SampleDeviceDriver.csproj", "{6EA27D79-B57D-498A-977F-D99BB3D8D639}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{6713AD84-8C1A-47F7-ADF4-31EC14E72EBD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,13 @@ Global
 		{6EA27D79-B57D-498A-977F-D99BB3D8D639}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6EA27D79-B57D-498A-977F-D99BB3D8D639}.Release|x64.ActiveCfg = Release|x64
 		{6EA27D79-B57D-498A-977F-D99BB3D8D639}.Release|x64.Build.0 = Release|x64
+		{6713AD84-8C1A-47F7-ADF4-31EC14E72EBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6713AD84-8C1A-47F7-ADF4-31EC14E72EBD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6713AD84-8C1A-47F7-ADF4-31EC14E72EBD}.Debug|x64.Build.0 = Debug|Any CPU
+		{6713AD84-8C1A-47F7-ADF4-31EC14E72EBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6713AD84-8C1A-47F7-ADF4-31EC14E72EBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6713AD84-8C1A-47F7-ADF4-31EC14E72EBD}.Release|x64.ActiveCfg = Release|Any CPU
+		{6713AD84-8C1A-47F7-ADF4-31EC14E72EBD}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

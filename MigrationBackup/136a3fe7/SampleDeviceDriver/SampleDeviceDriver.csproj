@@ -64,13 +64,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config\Constants.cs" />
-    <Compile Include="DeviceCommunication\DeviceProxy.cs" />
+    <Compile Include="StreamSessions\SampleDeviceDriverMicrophoneStreamSession.cs" />
+    <Compile Include="StreamSessions\SampleDeviceDriverSpeakerStreamSession.cs" />
+    <Compile Include="StreamSessions\SampleDeviceDriverMetadataStreamSession.cs" />
+    <Compile Include="StreamSessions\SampleDeviceDriverVideoStreamSession.cs" />
     <Compile Include="DriverFramework\SampleDeviceDriverConfigurationManager.cs" />
     <Compile Include="DriverFramework\SampleDeviceDriverConnectionManager.cs" />
     <Compile Include="DriverFramework\SampleDeviceDriverContainer.cs" />
     <Compile Include="DriverFramework\SampleDeviceDriverDriverDefinition.cs" />
     <Compile Include="DriverFramework\SampleDeviceDriverOutputManager.cs" />
+    <Compile Include="DriverFramework\SampleDeviceDriverPlaybackManager.cs" />
+    <Compile Include="DriverFramework\SampleDeviceDriverPtzManager.cs" />
+    <Compile Include="DriverFramework\SampleDeviceDriverSpeakerManager.cs" />
+    <Compile Include="DeviceCommunication\InputPoller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DriverFramework\SampleDeviceDriverStreamManager.cs" />
+    <Compile Include="StreamSessions\BaseSampleDeviceDriverStreamSession.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="SampleDeviceDriver.def">
@@ -79,12 +88,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="StreamSessions\" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
