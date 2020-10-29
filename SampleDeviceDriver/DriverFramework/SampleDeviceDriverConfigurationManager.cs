@@ -4,6 +4,7 @@ using System.Linq;
 using VideoOS.Platform.DriverFramework.Definitions;
 using VideoOS.Platform.DriverFramework.Exceptions;
 using VideoOS.Platform.DriverFramework.Managers;
+using VideoOS.Platform.DriverFramework.Utilities;
 
 namespace SampleDeviceDriver
 {
@@ -17,6 +18,7 @@ namespace SampleDeviceDriver
         private const string _firmwareVersion = "1.0";
         private const string _hardwareName = "SampleDeviceDriver Hardware";
         private const string _serialNumber = "12345";
+//        private readonly string macAddress = "AA:BB:CC:DD:EE:86"; // + new Random(DateTime.Now.Millisecond).Next(10, 99).ToString(); // TODO: fake mac
 
         private new SampleDeviceDriverContainer Container => base.Container as SampleDeviceDriverContainer;
 
@@ -33,8 +35,9 @@ namespace SampleDeviceDriver
 
             var driverInfo = Container.Definition.DriverInfo;
             var product = driverInfo.SupportedProducts.FirstOrDefault();
-            var macAddress = "DE:AD:C0:DE:56:77"; // TODO: Make request to hardware
-
+            // Fake MAC from VirtualDevice project (unique pr. host:port)
+            var macAddress = Container.ConnectionManager.FakeMacAddress;
+            Toolbox.Log.LogError(nameof(ProductInformation), $"Just INFO! Mac: {macAddress}");
             return new ProductInformation
             {
                 ProductId = product.Id,

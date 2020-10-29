@@ -19,6 +19,8 @@ namespace SampleDeviceDriver
         private string _userName;
         private SecureString _password;
         private bool _connected = false;
+        public string FakeMacAddress { get; private set; }
+        public Uri Uri { get { return _uri; } }
 
         public SampleDeviceDriverConnectionManager(SampleDeviceDriverContainer container) : base(container)
         {
@@ -40,6 +42,7 @@ namespace SampleDeviceDriver
             _uri = uri;
             _userName = userName;
             _password = password;
+            FakeMacAddress = MakeFakeMacAddressFromUri(uri);
 
             // TODO: Establish connection
 
@@ -70,7 +73,38 @@ namespace SampleDeviceDriver
                 return _connected;
             }
         }
+        private static string MakeFakeMacAddressFromUri(Uri uri)
+        {
+            Toolbox.Log.Trace("MakeFakeMacAddressFromUri");
 
-        public Uri Uri { get { return _uri; } }
+            const string defaultValue = "00";
+            string hostName = uri.IsLoopback ? "127.0.0.1" : uri.DnsSafeHost;
+
+            Toolbox.Log.LogDebug(nameof(MakeFakeMacAddressFromUri), "host name " + hostName);
+
+            var ipSegments = hostName.Split('.');
+            var macAddress = new string[6];
+            for (int i = 0; i < 4; i++)
+            {
+                if (i > ipSegments.Length - 1)
+                    macAddress[i] = defaultValue;
+
+                if (!int.TryParse(ipSegments[i], out int value))
+                    macAddress[i] = defaultValue; // Fallback value
+
+                macAddress[i] = (value % (byte.MaxValue + 1)).ToString("X2");
+            }
+
+            var portHexString = (uri.Port % (ushort.MaxValue + 1)).ToString("X2");
+
+            macAddress[4] = portHexString.Substring(0, 2);
+
+            if (portHexString.Length > 2)
+                macAddress[5] = portHexString.Substring(2, 2);
+            else
+                macAddress[5] = defaultValue;
+
+            return string.Join("-", macAddress);
+        }
     }
 }

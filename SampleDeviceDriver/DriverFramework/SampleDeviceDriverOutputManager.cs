@@ -27,8 +27,29 @@ namespace SampleDeviceDriver
 
         public override bool? IsActivated(string deviceId)
         {
+            Toolbox.Log.Trace("check activated...");
+            Toolbox.Log.LogDebug(nameof(IsActivated), $"deviceId: {deviceId}");
+            if (new Guid(deviceId) != Constants.Output1) throw new MIPDriverException("E4.1 - Device does not support Output commands");
+
             // TODO: If supported make request to device
-            return null;
+            try
+            {
+                string url = this.Container.ConnectionManager.Uri.AbsoluteUri; // ex http://localhost:5000
+                string switchId = this.Container.SettingsManager.GetSetting(new DeviceSetting(Constants.Switch1, deviceId, null)).Value;
+                string activatedState = this.Container.SettingsManager.GetSetting(new DeviceSetting(Constants.Switch1Activated, deviceId, null)).Value;
+                DeviceProxy proxy = new DeviceProxy();
+
+                Console.WriteLine("getting current state...");
+                string currentState = proxy.Get(url, switchId);
+                Console.WriteLine($"Got current state: {currentState}.");
+                Toolbox.Log.LogError(nameof(IsActivated), $"Just INFO! Got current state: {currentState}");
+               return currentState == activatedState;
+            }
+            catch (ApplicationException ex)
+            {
+                Toolbox.Log.LogError(nameof(IsActivated), $"Most INFO! Coulden't get current state: {ex}");
+                return null;
+            }
         }
 
         public override void TriggerOutput(string deviceId, int durationMs)
@@ -57,12 +78,8 @@ namespace SampleDeviceDriver
             if (new Guid(deviceId) == Constants.Output1)
             {
                 string url = this.Container.ConnectionManager.Uri.AbsoluteUri; // ex http://localhost:5000
-                //var settings = this.Container.ConfigurationManager.FetchHardwareDefinition().Devices.OfType<OutputDeviceDefinition>().First().Settings;
-                //string switchId = settings[Constants.Switch1];
-                //string state = settings[Constants.Switch1Activated];
                 string switchId = this.Container.SettingsManager.GetSetting(new DeviceSetting(Constants.Switch1, deviceId, null)).Value;
                 string state = this.Container.SettingsManager.GetSetting(new DeviceSetting(Constants.Switch1Activated, deviceId, null)).Value;
-                // TODO: make request to device
                 DeviceProxy proxy = new DeviceProxy();
 
                 Console.WriteLine("sending Activate...");
@@ -79,12 +96,9 @@ namespace SampleDeviceDriver
         {
             if (new Guid(deviceId) == Constants.Output1)
             {
-                // TODO: make request to device
                 string url = this.Container.ConnectionManager.Uri.AbsoluteUri; // ex http://localhost:5000
                 string switchId = this.Container.SettingsManager.GetSetting(new DeviceSetting(Constants.Switch1, deviceId, null)).Value;
-       //         var settings = this.Container.ConfigurationManager.FetchHardwareDefinition().Devices.OfType<OutputDeviceDefinition>().First().Settings;
                 string state = this.Container.SettingsManager.GetSetting(new DeviceSetting(Constants.Switch1Deactivated, deviceId, null)).Value;
-       //         settings[Constants.Switch1Deactivated];
                 DeviceProxy proxy = new DeviceProxy();
 
                 Console.WriteLine("sending Dectivate...");
