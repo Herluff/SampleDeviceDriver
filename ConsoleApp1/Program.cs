@@ -25,10 +25,10 @@ namespace ConsoleApp1
             DeviceProxy proxy = new DeviceProxy();
 
             Console.WriteLine("sending...");
-            proxy.Send("http://localhost:5050/","Door2", "blue");
+            proxy.Send("http://localhost:5000/","Door2", "blue");
             Console.WriteLine("sent.");
 
-            string got = proxy.Get("http://localhost:5050/", "Door2");
+            string got = proxy.Get("http://localhost:5000/", "Door2");
             Console.WriteLine(got);
 
         }

@@ -22,7 +22,8 @@ namespace SampleDeviceDriver.DeviceCommunication
             try
             {
                 Toolbox.Log.LogDebug(nameof(Send), $"{url} - {switchId} - {state}");
-                var content = new StringContent("{'state':'" + state + "'}");
+                //                var content = new StringContent("{'state':'" + state + "'}");
+                var content = new StringContent("{\"state\":\"" + state + "\"}");
                 content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
                 HttpResponseMessage response = client.PutAsync(url + "api/Switches/" + switchId, content).Result;
